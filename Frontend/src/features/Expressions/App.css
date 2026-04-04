@@ -1,0 +1,37 @@
+.appvide{
+  display: flex;
+  align-items: center;
+}
+
+.appcanvas{
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  transform: translate(-50%,-50%);
+}
+
+.myapp{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.video-container {
+  position: relative;
+  width: fit-content;
+}
+
+video {
+  position: relative;
+  z-index: 1;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2; 
+ 
+}
