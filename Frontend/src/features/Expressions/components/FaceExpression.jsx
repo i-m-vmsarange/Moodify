@@ -83,18 +83,13 @@ function App() {
 
   return (
     <div className="myapp">
-      <h1>Face Detection: {expression}</h1>
       <div className="video-container">
         <div className="appvide">
           <video crossOrigin="anonymous" ref={videoRef} autoPlay></video>
         </div>
-        <canvas
-          ref={canvasRef}
-          width="700"
-          height="450"
-          className="appcanvas"
-        />
+        <canvas ref={canvasRef} className="appcanvas" />
       </div>
+      <h2 style={{ marginTop: "1rem" }}>Face Detection: {expression}</h2>
     </div>
   );
 }
