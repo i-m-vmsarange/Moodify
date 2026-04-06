@@ -34,7 +34,7 @@ async function registerUser(req, res) {
     },
   );
   res.cookie("jwt_token", token);
-  res.status(200).json({
+  res.status(201).json({
     message: "User registered successfully!!",
     user: {
       username: user.username,
@@ -55,16 +55,17 @@ async function loginUser(req, res) {
       },
     ],
   });
+  // To avoid the phishing attack, we are sending the same message for both cases (user not found and invalid password)
   if (!dbUser) {
-    res.status(409).json({
-      message: "User with given username or email does not exist!!",
+    res.status(400).json({
+      message: "Invalid credentials!!!",
     });
   }
   const validPassword = await bcrypt.compare(password, dbUser.password);
 
   if (!validPassword) {
-    res.status(409).json({
-      message: "Invalid password!!!",
+    res.status(400).json({
+      message: "Invalid credentials!!!",
     });
   }
   const token = jwt.sign(
@@ -82,7 +83,22 @@ async function loginUser(req, res) {
     message: "User logged in successfully!!!",
   });
 }
+async function getUser(req, res) {
+  const user = req.user;
+
+  const dbUser = await userModel.findById(user.id);
+
+  res.status(200).json({
+    message: "Current logged in user",
+    user: {
+      id: dbUser._id,
+      username: dbUser.username,
+      email: dbUser.email,
+    },
+  });
+}
 module.exports = {
   registerUser,
   loginUser,
+  getUser,
 };
