@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const userModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const { blacklistModel } = require("../models/blacklist.model");
 
 async function registerUser(req, res) {
   const { username, email, password } = req.body;
@@ -45,16 +46,18 @@ async function registerUser(req, res) {
 async function loginUser(req, res) {
   const { username, email, password } = req.body;
 
-  const dbUser = await userModel.findOne({
-    $or: [
-      {
-        username,
-      },
-      {
-        email,
-      },
-    ],
-  });
+  const dbUser = await userModel
+    .findOne({
+      $or: [
+        {
+          username,
+        },
+        {
+          email,
+        },
+      ],
+    })
+    .select("+password");
   // To avoid the phishing attack, we are sending the same message for both cases (user not found and invalid password)
   if (!dbUser) {
     res.status(400).json({
@@ -90,15 +93,29 @@ async function getUser(req, res) {
 
   res.status(200).json({
     message: "Current logged in user",
-    user: {
-      id: dbUser._id,
-      username: dbUser.username,
-      email: dbUser.email,
-    },
+    user: dbUser,
+  });
+}
+async function logoutUser(req, res) {
+  const user = req.user;
+  const token = req.cookies.jwt_token;
+  res.clearCookie("jwt_token");
+
+  const response = await blacklistModel.create({ token });
+
+  if (!response) {
+    res.status(500).json({
+      message: "Internal server error!!!",
+    });
+  }
+
+  res.status(200).json({
+    message: `${user.username} is loggedout successfully!!!`,
   });
 }
 module.exports = {
   registerUser,
   loginUser,
   getUser,
+  logoutUser,
 };
