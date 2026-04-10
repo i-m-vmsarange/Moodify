@@ -12,7 +12,7 @@ async function registerUser(req, res) {
     $or: [{ username }, { email }],
   });
   if (dbUser) {
-    res.status(409).json({
+    return res.status(409).json({
       message: "User already exists!!!",
       user: {
         dbUser,
@@ -36,7 +36,7 @@ async function registerUser(req, res) {
     },
   );
   res.cookie("jwt_token", token);
-  res.status(201).json({
+  return res.status(201).json({
     message: "User registered successfully!!",
     user: {
       username: user.username,
@@ -46,7 +46,7 @@ async function registerUser(req, res) {
 }
 async function loginUser(req, res) {
   const { username, email, password } = req.body;
-
+  console.log(username, email, password);
   const dbUser = await userModel
     .findOne({
       $or: [
@@ -61,14 +61,14 @@ async function loginUser(req, res) {
     .select("+password");
   // To avoid the phishing attack, we are sending the same message for both cases (user not found and invalid password)
   if (!dbUser) {
-    res.status(400).json({
+    return res.status(400).json({
       message: "Invalid credentials!!!",
     });
   }
   const validPassword = await bcrypt.compare(password, dbUser.password);
 
   if (!validPassword) {
-    res.status(400).json({
+    return res.status(400).json({
       message: "Invalid credentials!!!",
     });
   }
@@ -83,7 +83,7 @@ async function loginUser(req, res) {
     },
   );
   res.cookie("jwt_token", token);
-  res.status(200).json({
+  return res.status(200).json({
     message: "User logged in successfully!!!",
   });
 }
@@ -92,7 +92,7 @@ async function getUser(req, res) {
 
   const dbUser = await userModel.findById(user.id);
 
-  res.status(200).json({
+  return res.status(200).json({
     message: "Current logged in user",
     user: dbUser,
   });
@@ -107,12 +107,12 @@ async function logoutUser(req, res) {
   const response = await redis.set(token, Date.now().toString());
 
   if (!response) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Internal server error!!!",
     });
   }
 
-  res.status(200).json({
+  return res.status(200).json({
     message: `${user.username} is loggedout successfully!!!`,
   });
 }
