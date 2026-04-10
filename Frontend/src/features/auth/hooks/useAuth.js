@@ -6,10 +6,9 @@ export const useAuth = () => {
   const context = useContext(AuthContext);
   const { user, setUser, loading, setLoading } = context;
 
-  setLoading(true);
-
   async function handleRegister({ username, password }) {
     try {
+      setLoading(true);
       const data = await register({ username, email, password });
       setUser(data.user);
       return data;
