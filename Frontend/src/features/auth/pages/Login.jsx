@@ -51,6 +51,7 @@ const Login = () => {
             id="username"
             placeholder="Enter username"
             className="border border-amber-50 rounded-md px-2 py-1"
+            required
           />
           <input
             onChange={(e) => {
@@ -61,6 +62,7 @@ const Login = () => {
             id="password"
             placeholder="Enter password"
             className="border border-amber-50 rounded-md    px-2 py-1"
+            required
           />
           <button className="my-1 mb-2 cursor-pointer px-4 py-2 rounded-sm bg-blue-700 font-semibold text-md tracking-wide">
             Submit
