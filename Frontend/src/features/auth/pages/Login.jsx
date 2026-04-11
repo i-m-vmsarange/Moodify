@@ -7,16 +7,20 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { handleLogin } = useAuth();
+
+  const { handleLogin, loading } = useAuth();
   const navigate = useNavigate();
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = await handleLogin({
-        username: username,
-        email: null,
-        password: password,
+        username,
+        password,
       });
       console.log("Login successful:", data);
       navigate("/");
