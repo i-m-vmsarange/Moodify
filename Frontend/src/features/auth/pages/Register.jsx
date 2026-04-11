@@ -1,24 +1,30 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
+import { useAuth } from "../hooks/useAuth";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const { loading, handleRegister } = useAuth();
+  const { loading, handleRegister } = useAuth();
   const navigate = useNavigate();
 
-  // if (loading) {
-  //   return <h1>Loading...</h1>;
-  // }
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
 
-  // async function submitHandler(e) {
-  //   e.preventDefault();
-  //   const response = await handleRegister(username, email, password);
-  //   console.log(response);
-  //   navigate("/login");
-  // }
+  async function submitHandler(e) {
+    e.preventDefault();
+
+    try {
+      const response = await handleRegister({ username, email, password });
+      console.log("User registered successfully:", response);
+      navigate("/login");
+    } catch (error) {
+      console.error("Registration error:", error);
+    }
+  }
 
   return (
     <main className="mx-auto my-4 px-4 py-4">
@@ -30,7 +36,7 @@ const Register = () => {
           Register
         </h1>
         <form
-          // onSubmit={submitHandler}
+          onSubmit={submitHandler}
           className="flex flex-col items-center justify-center gap-4"
         >
           <input
@@ -42,6 +48,7 @@ const Register = () => {
             id="username"
             placeholder="Enter username"
             className="border border-amber-50 rounded-md px-2 py-1"
+            required
           />
           <input
             onChange={(e) => {
@@ -52,6 +59,7 @@ const Register = () => {
             id="email"
             placeholder="Enter email"
             className="border border-amber-50 rounded-md px-2 py-1"
+            required
           />
           <input
             onChange={(e) => {
@@ -62,6 +70,7 @@ const Register = () => {
             id="password"
             placeholder="Enter password"
             className="border border-amber-50 rounded-md    px-2 py-1"
+            required
           />
           <button className="my-1 mb-2 cursor-pointer px-4 py-2 rounded-sm bg-pink-700 font-semibold text-md tracking-wide">
             Submit

@@ -7,16 +7,20 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { handleLogin } = useAuth();
+
+  const { handleLogin, loading } = useAuth();
   const navigate = useNavigate();
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = await handleLogin({
-        username: username,
-        email: null,
-        password: password,
+        username,
+        password,
       });
       console.log("Login successful:", data);
       navigate("/");
@@ -47,6 +51,7 @@ const Login = () => {
             id="username"
             placeholder="Enter username"
             className="border border-amber-50 rounded-md px-2 py-1"
+            required
           />
           <input
             onChange={(e) => {
@@ -57,6 +62,7 @@ const Login = () => {
             id="password"
             placeholder="Enter password"
             className="border border-amber-50 rounded-md    px-2 py-1"
+            required
           />
           <button className="my-1 mb-2 cursor-pointer px-4 py-2 rounded-sm bg-blue-700 font-semibold text-md tracking-wide">
             Submit

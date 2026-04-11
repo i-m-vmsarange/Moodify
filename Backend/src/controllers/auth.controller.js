@@ -45,16 +45,18 @@ async function registerUser(req, res) {
   });
 }
 async function loginUser(req, res) {
-  const { username, email, password } = req.body;
-  console.log(username, email, password);
+  const { username, password } = req.body;
+
+  const identifier = username;
+
   const dbUser = await userModel
     .findOne({
       $or: [
         {
-          username,
+          username: identifier,
         },
         {
-          email,
+          email: identifier,
         },
       ],
     })
@@ -85,6 +87,10 @@ async function loginUser(req, res) {
   res.cookie("jwt_token", token);
   return res.status(200).json({
     message: "User logged in successfully!!!",
+    user: {
+      username: dbUser.username,
+      email: dbUser.email,
+    },
   });
 }
 async function getUser(req, res) {
