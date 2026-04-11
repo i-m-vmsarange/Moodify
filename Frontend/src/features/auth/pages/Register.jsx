@@ -48,6 +48,7 @@ const Register = () => {
             id="username"
             placeholder="Enter username"
             className="border border-amber-50 rounded-md px-2 py-1"
+            required
           />
           <input
             onChange={(e) => {
@@ -58,6 +59,7 @@ const Register = () => {
             id="email"
             placeholder="Enter email"
             className="border border-amber-50 rounded-md px-2 py-1"
+            required
           />
           <input
             onChange={(e) => {
@@ -68,6 +70,7 @@ const Register = () => {
             id="password"
             placeholder="Enter password"
             className="border border-amber-50 rounded-md    px-2 py-1"
+            required
           />
           <button className="my-1 mb-2 cursor-pointer px-4 py-2 rounded-sm bg-pink-700 font-semibold text-md tracking-wide">
             Submit
