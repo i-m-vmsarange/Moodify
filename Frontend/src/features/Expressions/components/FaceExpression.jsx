@@ -1,6 +1,8 @@
 import { useRef, useEffect, useState } from "react";
 import "../App.css";
 import * as faceapi from "face-api.js";
+import Player from "../../home/components/Player";
+import { getSong } from "../../home/api/song.api";
 
 function App() {
   const videoRef = useRef();
@@ -12,6 +14,11 @@ function App() {
     startVideo();
     loadModels();
   }, []);
+
+  async function handleGetSong(mood) {
+    const song = await getSong({ mood });
+    return song;
+  }
 
   // OPEN YOU FACE WEBCAM
   const startVideo = () => {
@@ -138,13 +145,19 @@ function App() {
       <h2 style={{ marginTop: "1rem" }}>Face Detection: {expression}</h2>
       <button
         onClick={() => {
-          detectExpression();
-          setFaceDetecting(!faceDetecting);
+          setExpression("Detecting...");
+          setFaceDetecting(true);
+          setTimeout(async () => {
+            await detectExpression();
+            await handleGetSong(expression);
+            setFaceDetecting(false);
+          }, 1500);
         }}
         className="px-4 py-3 bg-pink-700 rounded-md cursor-pointer font-semibold active:scale-95"
       >
         Detect Expression
       </button>
+      <Player mood={expression} />
     </div>
   );
 }
