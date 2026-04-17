@@ -3,7 +3,7 @@ import Login from "./features/auth/pages/Login";
 import Register from "./features/auth/pages/Register";
 import Home from "./features/Home";
 import Protected from "./features/auth/components/Protected";
-
+import FaceExpression from "./features/Expressions/components/FaceExpression";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -20,5 +20,9 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/detectExpression",
+    element: <FaceExpression />,
   },
 ]);

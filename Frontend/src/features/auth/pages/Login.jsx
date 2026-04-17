@@ -23,7 +23,7 @@ const Login = () => {
         password,
       });
       console.log("Login successful:", data);
-      navigate("/");
+      navigate("/detectExpression");
     } catch (error) {
       console.error("Login error:", error);
     }
