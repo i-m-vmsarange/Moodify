@@ -8,10 +8,10 @@ export const useSong = () => {
 
   const getSongHandler = async ({ mood }) => {
     setLoading(true);
-
+    console.log(mood);
     try {
       const data = await getSong({ mood });
-      setSong(data);
+      setSong(data.song);
       return data;
     } catch (error) {
       console.log(error);

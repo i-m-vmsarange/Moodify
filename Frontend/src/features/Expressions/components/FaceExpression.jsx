@@ -2,22 +2,23 @@ import { useRef, useEffect, useState } from "react";
 import "../App.css";
 import * as faceapi from "face-api.js";
 import Player from "../../home/components/Player";
-import { getSong } from "../../home/api/song.api";
+import { useSong } from "../../home/hooks/useSong";
 
 function App() {
   const videoRef = useRef();
   const canvasRef = useRef();
   const [expression, setExpression] = useState("Detecting...");
   const [faceDetecting, setFaceDetecting] = useState(true);
+  const { getSongHandler, song } = useSong();
   // LOAD FROM USEEFFECT
   useEffect(() => {
     startVideo();
     loadModels();
   }, []);
 
-  async function handleGetSong(mood) {
-    const song = await getSong({ mood });
-    return song;
+  async function handleGetSong({ mood }) {
+    const result = await getSongHandler({ mood });
+    console.log(result);
   }
 
   // OPEN YOU FACE WEBCAM
@@ -87,6 +88,8 @@ function App() {
     faceapi.draw.drawDetections(canvas, resized);
     faceapi.draw.drawFaceLandmarks(canvas, resized);
     faceapi.draw.drawFaceExpressions(canvas, resized);
+
+    return currentExpression;
   };
 
   // const faceMyDetect = () => {
@@ -148,8 +151,8 @@ function App() {
           setExpression("Detecting...");
           setFaceDetecting(true);
           setTimeout(async () => {
-            await detectExpression();
-            await handleGetSong(expression);
+            const currentExpression = await detectExpression();
+            await handleGetSong({ mood: currentExpression });
             setFaceDetecting(false);
           }, 1500);
         }}
@@ -157,7 +160,7 @@ function App() {
       >
         Detect Expression
       </button>
-      <Player mood={expression} />
+      {song && <Player />}
     </div>
   );
 }

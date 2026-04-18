@@ -9,11 +9,10 @@ import {
   Volume1,
 } from "lucide-react";
 
-const Player = (props) => {
-  console.log(props.mood);
-  const { song, getSongHandler } = useSong();
+const Player = () => {
+  const { song } = useSong();
   const audioRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
@@ -104,12 +103,23 @@ const Player = (props) => {
     setIsPlaying(false);
   };
 
+  // Auto-play when song changes
+  useEffect(() => {
+    if (audioRef.current && song?.songUrl) {
+      audioRef.current.play().catch((error) => {
+        console.log("Auto-play failed:", error);
+        setIsPlaying(false);
+      });
+    }
+  }, [song?.songUrl]);
+
   return (
     <div className="w-full bg-linear-to-r from-gray-900 via-gray-800 to-gray-900 rounded-xl p-2 shadow-2xl border border-gray-700">
       {/* Hidden Audio Element */}
       <audio
         ref={audioRef}
-        src={song.songUrl}
+        src={song?.songUrl}
+        autoPlay
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={handleSongEnd}
@@ -121,8 +131,8 @@ const Player = (props) => {
         <div className="shrink-0 pt-1">
           <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden shadow-lg shrink-0">
             <img
-              src={song.posterUrl}
-              alt={song.songTitle}
+              src={song?.posterUrl}
+              alt={song?.songTitle}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
@@ -134,10 +144,10 @@ const Player = (props) => {
           {/* Song Info */}
           <div className="mb-2">
             <h2 className="text-base md:text-lg font-bold text-white truncate leading-tight">
-              {song.songTitle}
+              {song?.songTitle}
             </h2>
             <p className="text-xs text-gray-400 capitalize leading-tight">
-              {song.mood}
+              {song?.mood}
             </p>
           </div>
 
